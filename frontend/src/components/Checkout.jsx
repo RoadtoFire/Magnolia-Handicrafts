@@ -7,7 +7,7 @@ import API_BASE_URL from '../config';
 export default function Checkout() {
   const { cart, cartTotal, clearCart } = useCart(); // Get cart data
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -16,13 +16,16 @@ export default function Checkout() {
     city: ''
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setIsSubmitting(true);
+
     // 1. Format data for Django
     const orderPayload = {
       ...formData,
@@ -36,20 +39,16 @@ export default function Checkout() {
 
     try {
       // 2. Send to Backend
-      await axios.post('${API_BASE_URL}/api/orders/', orderPayload);
-      
-      // 3. Success!
-      const response = await axios.post('${API_BASE_URL}/api/orders/', orderPayload);
+      const response = await axios.post(`${API_BASE_URL}/api/orders/`, orderPayload);
 
-      localStorage.removeItem('magnolia_cart'); // Clear Cart
-      // Navigate to success page and PASS the Order ID
-      navigate('/order-success', { state: { orderId: response.data.id } });
+      // 3. Success! Clear cart and navigate to success page with the Order ID
       clearCart();
-      localStorage.removeItem('magnolia_cart'); // Clear cart
       navigate('/order-success', { state: { orderId: response.data.id } });
     } catch (error) {
       console.error("Order failed:", error);
       alert("Something went wrong. Check console.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -83,8 +82,8 @@ export default function Checkout() {
             <textarea required name="address" onChange={handleChange} rows="3" className="w-full border border-stone-200 p-3 text-sm focus:outline-stone-900" placeholder="e.g. House 12, Street 4, F-7/2"></textarea>
           </div>
           
-          <button type="submit" className="w-full bg-stone-900 text-white py-4 text-xs uppercase tracking-[0.2em] hover:bg-stone-700 transition-colors">
-            Place Order
+          <button type="submit" disabled={isSubmitting} className="w-full bg-stone-900 text-white py-4 text-xs uppercase tracking-[0.2em] hover:bg-stone-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            {isSubmitting ? 'Placing Order...' : 'Place Order'}
           </button>
         </form>
 

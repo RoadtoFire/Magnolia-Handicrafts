@@ -1,12 +1,18 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-# ✅ CORRECT
+from . import views
+from . import auth_views
+
+router = DefaultRouter()
+router.register('products', views.ProductViewSet, basename='product')
+router.register('product-images', views.ProductImageViewSet, basename='product-image')
+router.register('orders', views.OrderViewSet, basename='order')
+
 urlpatterns = [
-    # 1. List of ALL products (Plural function)
-    path('products/', views.get_products, name='get_products'), 
-    
-    # 2. Single product detail (Singular function)
-    path('products/<int:pk>/', views.get_product, name='get_product'),
-    path('orders/', views.create_order, name='create_order'),
+    path('auth/login/', auth_views.login_view, name='auth-login'),
+    path('auth/refresh/', auth_views.refresh_view, name='auth-refresh'),
+    path('auth/logout/', auth_views.logout_view, name='auth-logout'),
+    path('auth/me/', auth_views.me_view, name='auth-me'),
+    path('', include(router.urls)),
 ]

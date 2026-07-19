@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config';
 
 export default function CartDrawer() {
   const { 
@@ -63,7 +64,7 @@ export default function CartDrawer() {
                 {/* Image */}
                 <div className="w-20 h-20 bg-stone-100 rounded-sm flex-shrink-0 overflow-hidden">
                    {item.image && (
-                     <img src={`http://127.0.0.1:8000${item.image}`} alt={item.name} className="w-full h-full object-cover" />
+                     <img src={`${API_BASE_URL}${item.image}`} alt={item.name} className="w-full h-full object-cover" />
                    )}
                 </div>
                 

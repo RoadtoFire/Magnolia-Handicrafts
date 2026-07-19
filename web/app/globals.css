@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fafaf9; /* stone-50 */
+  --foreground: #1c1917; /* stone-900 */
+}
+
+@theme {
+  /* Brand serif used for headings, ported from the Vite app's tailwind.config.js */
+  --font-serif: Georgia, "Times New Roman", serif;
+
+  /* Logo sway animation, ported as-is from the Vite app */
+  --animate-sway: sway 4s ease-in-out infinite;
+
+  /* Hero eyebrow text entrance animation.
+     NOTE: this class was referenced in the old Vite app's Hero.jsx
+     (`animate-fade-in-up`) but never actually defined there, so it was a
+     silent no-op. It is defined here for real this time. */
+  --animate-fade-in-up: fade-in-up 0.9s ease-out both;
+
+  @keyframes sway {
+    0%,
+    100% {
+      transform: rotate(-5deg);
+    }
+    50% {
+      transform: rotate(5deg);
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
