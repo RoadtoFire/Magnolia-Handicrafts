@@ -12,7 +12,7 @@ export default function ProductGallery({ images, productName }) {
 
   if (images.length === 0) {
     return (
-      <div className="bg-stone-100 aspect-square rounded-sm flex items-center justify-center text-stone-300">
+      <div className="bg-stone-100 aspect-[4/5] rounded-sm flex items-center justify-center text-stone-300">
         <span className="text-xs uppercase tracking-widest">No Image</span>
       </div>
     );
@@ -22,12 +22,15 @@ export default function ProductGallery({ images, productName }) {
 
   return (
     <div>
-      <div className="group bg-stone-100 aspect-square relative rounded-sm overflow-hidden">
+      {/* Portrait aspect ratio (vs. the previous square crop) so the photo
+          reads as much larger now that this column also got more of the
+          page's width - the product image should dominate this page. */}
+      <div className="group bg-stone-100 aspect-[4/5] relative rounded-sm overflow-hidden">
         <Image
           src={current.url}
           alt={current.alt || productName}
           fill
-          sizes="(min-width: 768px) 50vw, 100vw"
+          sizes="(min-width: 768px) 60vw, 100vw"
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
           priority
         />

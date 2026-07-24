@@ -73,7 +73,7 @@ export default async function ProductDetailPage({ params }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
+    <div className="max-w-[1600px] mx-auto px-6 py-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -83,7 +83,9 @@ export default async function ProductDetailPage({ params }) {
         &larr; Back
       </Link>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      {/* Image column gets ~65% of the width on desktop (vs. an even 50/50
+          split before) - the product photo should dominate the page. */}
+      <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-12">
         <ProductGallery images={galleryImages} productName={product.name} />
         <div className="flex flex-col justify-center">
           <h1 className="text-3xl font-serif text-stone-900 mb-2">{product.name}</h1>
