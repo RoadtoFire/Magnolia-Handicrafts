@@ -48,6 +48,30 @@ export function getPrimaryImage(product) {
   return null;
 }
 
+/**
+ * Every image for a product, in display order, for the product detail
+ * page's gallery (thumbnail strip + main viewer) — as opposed to
+ * getPrimaryImage() above, which only ever needs the first one (card grids,
+ * OG/meta tags). Same fallback shape: nested `images[]` preferred, legacy
+ * single `image` field as a one-item array, empty array if neither exists.
+ */
+export function getGalleryImages(product) {
+  if (!product) return [];
+  if (Array.isArray(product.images) && product.images.length > 0) {
+    return [...product.images]
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      .map((img) => ({
+        url: resolveImageUrl(img.image),
+        alt: img.alt_text || product.name,
+      }))
+      .filter((img) => img.url);
+  }
+  if (product.image) {
+    return [{ url: resolveImageUrl(product.image), alt: product.name }];
+  }
+  return [];
+}
+
 async function request(path, options = {}) {
   const res = await fetch(`${API_URL}${path}`, {
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },

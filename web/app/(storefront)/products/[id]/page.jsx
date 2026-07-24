@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getProduct, getProducts, getPrimaryImage } from "@/lib/api";
+import { getProduct, getProducts, getPrimaryImage, getGalleryImages } from "@/lib/api";
 import AddToCartButton from "@/components/AddToCartButton";
+import ProductGallery from "@/components/ProductGallery";
 
 // Pre-render known product pages at build time (ISR beyond that via the
 // `revalidate: 60` on the fetch in lib/api.js — new products that appear
@@ -56,6 +56,7 @@ export default async function ProductDetailPage({ params }) {
   if (!product) notFound();
 
   const imageUrl = getPrimaryImage(product);
+  const galleryImages = getGalleryImages(product);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -83,18 +84,7 @@ export default async function ProductDetailPage({ params }) {
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="bg-stone-100 aspect-square relative rounded-sm overflow-hidden">
-          {imageUrl && (
-            <Image
-              src={imageUrl}
-              alt={product.name}
-              fill
-              sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover"
-              priority
-            />
-          )}
-        </div>
+        <ProductGallery images={galleryImages} productName={product.name} />
         <div className="flex flex-col justify-center">
           <h1 className="text-3xl font-serif text-stone-900 mb-2">{product.name}</h1>
           <p className="text-2xl font-medium text-stone-800 mb-8">
