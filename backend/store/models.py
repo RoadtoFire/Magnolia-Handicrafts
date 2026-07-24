@@ -46,13 +46,20 @@ class Order(models.Model):
     # that purpose - the internal admin/list APIs can keep using `id`.
     public_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
+    # Linear fulfillment pipeline the admin dashboard steps an order through
+    # (new -> confirmed -> dispatched -> delivered -> review_received), plus
+    # 'cancelled' as a separate escape hatch outside that sequence. A single
+    # ordered field (rather than independent booleans per stage) means the
+    # order can never end up in a nonsensical state like "delivered" without
+    # having been "dispatched" first.
     status = models.CharField(
         max_length=20,
         choices=[
             ('new', 'New'),
             ('confirmed', 'Confirmed'),
-            ('shipped', 'Shipped'),
+            ('dispatched', 'Dispatched'),
             ('delivered', 'Delivered'),
+            ('review_received', 'Review Received'),
             ('cancelled', 'Cancelled'),
         ],
         default='new',

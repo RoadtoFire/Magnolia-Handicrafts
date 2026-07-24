@@ -58,11 +58,19 @@ class OrderSerializer(serializers.ModelSerializer):
             # would let anyone check out for an arbitrary amount.
             'total_amount': {'read_only': True},
             'public_id': {'read_only': True},
-            'status': {'read_only': True},
             'payment_status': {'read_only': True},
             # payment_method IS writable - checkout picks 'cod', 'safepay',
             # or 'easypaisa' up front - but it only selects the gateway, it
             # never carries a trusted amount.
+            #
+            # status IS writable (admin-only, via PATCH) - this is how the
+            # admin dashboard steps an order through New -> Confirmed ->
+            # Dispatched -> Delivered -> Review Received (or Cancelled). The
+            # admin frontend only ever PATCHes {"status": "..."} on its own,
+            # never alongside `items`, so ModelSerializer's default update()
+            # never has to deal with the nested `items` field (which it
+            # doesn't support writing to outside of the custom create()
+            # below).
         }
 
     def create(self, validated_data):

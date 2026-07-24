@@ -81,13 +81,17 @@ class OrderViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     """
-    Preserves the original URL shape:
-      POST /api/orders/         (public - customer checkout)
-      GET  /api/orders/         (admin only - order management)
-      GET  /api/orders/<pk>/    (admin only)
+    Preserves the original URL shape, plus PATCH for the admin fulfillment
+    stepper (New -> Confirmed -> Dispatched -> Delivered -> Review Received,
+    or Cancelled):
+      POST  /api/orders/         (public - customer checkout)
+      GET   /api/orders/         (admin only - order management)
+      GET   /api/orders/<pk>/    (admin only)
+      PATCH /api/orders/<pk>/    (admin only - update status)
     """
     queryset = Order.objects.all().prefetch_related('items').order_by('-created_at')
     serializer_class = OrderSerializer

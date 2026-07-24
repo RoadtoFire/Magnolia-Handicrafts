@@ -346,3 +346,15 @@ export function getOrders() {
 export function getOrder(id) {
   return adminRequest(`/api/orders/${id}/`);
 }
+
+/**
+ * PATCH /api/orders/<id>/ — admin-only, advance an order through its
+ * fulfillment pipeline (or mark it cancelled). Only ever send `status` here
+ * - payment_status/total_amount are read-only server-side on purpose.
+ */
+export function updateOrderStatus(id, status) {
+  return adminRequest(`/api/orders/${id}/`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+}

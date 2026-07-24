@@ -1,14 +1,31 @@
 from decimal import Decimal
 
 import pytest
+from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from store.models import Order, OrderItem, Product
+
+User = get_user_model()
 
 
 @pytest.fixture
 def api_client():
     return APIClient()
+
+
+@pytest.fixture
+def staff_user(db):
+    return User.objects.create_user(username='staffuser', password='pass12345', is_staff=True)
+
+
+@pytest.fixture
+def admin_client(api_client, staff_user):
+    """An APIClient carrying a valid access_token cookie for a staff user."""
+    access = RefreshToken.for_user(staff_user).access_token
+    api_client.cookies['access_token'] = str(access)
+    return api_client
 
 
 @pytest.fixture
@@ -131,3 +148,55 @@ def test_safepay_order_defaults_to_new_and_pending(api_client, expensive_product
     assert order.payment_method == 'safepay'
     assert order.status == 'new'
     assert order.payment_status == 'pending'
+
+
+@pytest.fixture
+def existing_order(db, expensive_product):
+    order = Order.objects.create(
+        full_name='Existing Customer',
+        email='existing@example.com',
+        phone='0300-5555555',
+        address='3 Fulfillment Rd',
+        city='Lahore',
+        total_amount=Decimal('5000.00'),
+    )
+    OrderItem.objects.create(order=order, product=expensive_product, quantity=1, price=Decimal('5000.00'))
+    return order
+
+
+@pytest.mark.django_db
+def test_admin_can_advance_order_status(admin_client, existing_order):
+    resp = admin_client.patch(f'/api/orders/{existing_order.id}/', {'status': 'dispatched'}, format='json')
+    assert resp.status_code == 200, resp.data
+
+    existing_order.refresh_from_db()
+    assert existing_order.status == 'dispatched'
+
+
+@pytest.mark.django_db
+def test_anonymous_cannot_update_order_status(api_client, existing_order):
+    resp = api_client.patch(f'/api/orders/{existing_order.id}/', {'status': 'dispatched'}, format='json')
+    assert resp.status_code == 401
+
+    existing_order.refresh_from_db()
+    assert existing_order.status == 'new'
+
+
+@pytest.mark.django_db
+def test_updating_status_does_not_touch_payment_status_or_total(admin_client, existing_order):
+    existing_order.payment_status = 'paid'
+    existing_order.save(update_fields=['payment_status'])
+
+    resp = admin_client.patch(
+        f'/api/orders/{existing_order.id}/',
+        {'status': 'delivered', 'payment_status': 'refunded', 'total_amount': '1.00'},
+        format='json',
+    )
+    assert resp.status_code == 200, resp.data
+
+    existing_order.refresh_from_db()
+    assert existing_order.status == 'delivered'
+    # Read-only fields silently ignored, not applied - the request didn't
+    # error, but it also didn't get to overwrite trusted server state.
+    assert existing_order.payment_status == 'paid'
+    assert existing_order.total_amount == Decimal('5000.00')
