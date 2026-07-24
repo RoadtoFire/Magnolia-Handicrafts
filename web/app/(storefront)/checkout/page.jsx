@@ -194,7 +194,7 @@ export default function CheckoutPage() {
           <div className="space-y-4 mb-6 border-b border-stone-200 pb-6">
             {cart.map((item) => (
               <div key={item.id} className="flex justify-between text-sm">
-                <span>{item.quantity} x {item.name}</span>
+                <span>{item.quantity} x {item.name} </span>
                 <span> PKR {(item.price * item.quantity).toLocaleString()}</span>
               </div>
             ))}
