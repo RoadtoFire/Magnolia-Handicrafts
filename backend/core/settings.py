@@ -158,14 +158,14 @@ STORAGES = {
 
 CORS_ALLOWED_ORIGINS = env.list(
     'CORS_ALLOWED_ORIGINS',
-    default=['http://localhost:5173', 'http://localhost:3000'],
+    default=['http://localhost:3000'],
 )
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
 
 # Used by the (future) frontend-facing emails/redirects and by cookie scoping.
-FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
+FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:3000')
 AUTH_COOKIE_DOMAIN = env('AUTH_COOKIE_DOMAIN', default=None)
 
 

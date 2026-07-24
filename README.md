@@ -18,20 +18,10 @@ Two services deployed independently:
   `/admin` section a non-technical store owner can use to manage products
   and view orders. See [`web/README.md`](web/README.md).
 
-There is also a **`frontend/`** directory: the original Vite + React SPA
-this project started as. It has been superseded by `web/` (which has full
-feature parity plus SEO, payments, and an admin UI) and is kept around
-**temporarily, only for reference** while `web/` is confirmed stable in
-production. It is not being actively developed and should be deleted in a
-future cleanup once `web/` is the live storefront — that's a deliberate
-decision for the store owner/developer to make explicitly, not something to
-do automatically.
-
 ```
 Magnolia-Handicrafts/
 ├── backend/     Django + DRF API (products, orders, auth, payments)
-├── web/         Next.js storefront + admin dashboard (the real frontend)
-└── frontend/    legacy Vite SPA — reference only, superseded by web/
+└── web/         Next.js storefront + admin dashboard
 ```
 
 ## Local development
