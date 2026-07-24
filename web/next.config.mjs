@@ -32,6 +32,19 @@ const nextConfig = {
         port: "8000",
         pathname: "/**",
       },
+      // Production Django API (filesystem fallback media, until CLOUDINARY_URL
+      // is configured on Render) - same reasoning as the local dev entries
+      // above, just over https and the real domain.
+      {
+        protocol: "https",
+        hostname: "api.magnoliabyrahatjamal.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "magnolia-backend-m5qj.onrender.com",
+        pathname: "/**",
+      },
     ],
   },
 };
