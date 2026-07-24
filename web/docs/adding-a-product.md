@@ -12,7 +12,11 @@ through adding a new product using the admin dashboard.
    top right.
 3. Fill in the product details:
    - **Product Name** — e.g. "Hand-Painted Silk Cushion"
-   - **Description** — a short description of what makes the piece special
+   - **Short Description** — one short line about the piece. This is what
+     shows up on the homepage, under the photo, so keep it brief.
+   - **Full Description** — as much detail as you like: materials, care
+     instructions, sizing, the story behind it. This shows up on the
+     product's own page when a customer clicks into it.
    - **Price (PKR)** — the price in Pakistani Rupees
    - Leave the **"This item is available for purchase"** box checked if
      customers should be able to buy it right away (uncheck it if it's out

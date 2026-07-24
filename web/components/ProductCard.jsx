@@ -33,8 +33,8 @@ export default function ProductCard({ product }) {
           {product.name}
         </h3>
 
-        <p className="mt-1 text-xs text-stone-500 line-clamp-2 min-h-[2.5em]">
-          {product.description || "Luxury lawn collection."}
+        <p className="mt-1 text-xs text-stone-500 line-clamp-1 min-h-[1.25em]">
+          {product.short_description || "Luxury lawn collection."}
         </p>
 
         <div className="mt-4 pt-3 border-t border-stone-100 w-full">

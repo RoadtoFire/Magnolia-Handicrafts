@@ -35,7 +35,8 @@ export async function generateMetadata({ params }) {
     return { title: "Product not found" };
   }
 
-  const description = (product.description || "").slice(0, 160) || undefined;
+  const description =
+    (product.short_description || product.description || "").slice(0, 160) || undefined;
   const image = getPrimaryImage(product);
 
   return {
@@ -92,6 +93,12 @@ export default async function ProductDetailPage({ params }) {
           <p className="text-2xl font-medium text-stone-800 mb-8">
             PKR {Number(product.price).toLocaleString()}
           </p>
+
+          {product.description && (
+            <p className="whitespace-pre-line text-stone-600 leading-relaxed mb-8">
+              {product.description}
+            </p>
+          )}
 
           <AddToCartButton product={product} />
         </div>

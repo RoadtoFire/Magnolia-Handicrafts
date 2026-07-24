@@ -15,7 +15,7 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'is_in_stock')
+    list_display = ('name', 'short_description', 'price', 'is_in_stock')
     inlines = [ProductImageInline]
 
 @admin.register(Order)

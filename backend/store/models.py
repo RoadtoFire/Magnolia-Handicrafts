@@ -4,6 +4,9 @@ from django.db import models
 
 class Product(models.Model):
     name = models.CharField(max_length=200)
+    # One line, shown on the homepage/product grid card.
+    short_description = models.CharField(max_length=160, blank=True)
+    # As many lines as needed, shown on the product's own detail page.
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     is_in_stock = models.BooleanField(default=True)

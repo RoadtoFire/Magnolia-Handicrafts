@@ -35,6 +35,7 @@ export default function ProductForm({ mode, product, onSaved }) {
   const isEdit = mode === "edit";
 
   const [name, setName] = useState(product?.name ?? "");
+  const [shortDescription, setShortDescription] = useState(product?.short_description ?? "");
   const [description, setDescription] = useState(product?.description ?? "");
   const [price, setPrice] = useState(product?.price ?? "");
   const [isInStock, setIsInStock] = useState(product?.is_in_stock ?? true);
@@ -136,6 +137,7 @@ export default function ProductForm({ mode, product, onSaved }) {
 
     const payload = {
       name: name.trim(),
+      short_description: shortDescription.trim(),
       description: description.trim(),
       price,
       is_in_stock: isInStock,
@@ -184,16 +186,40 @@ export default function ProductForm({ mode, product, onSaved }) {
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-xs uppercase tracking-widest text-stone-500 mb-2">
-            Description
+          <label htmlFor="short_description" className="block text-xs uppercase tracking-widest text-stone-500 mb-2">
+            Short Description
           </label>
+          <p className="text-xs text-stone-400 mb-2">
+            One short line, shown on the homepage under the product photo.
+          </p>
+          <input
+            id="short_description"
+            type="text"
+            maxLength={160}
+            value={shortDescription}
+            onChange={(e) => setShortDescription(e.target.value)}
+            className="w-full border border-stone-200 p-3 text-sm focus:outline-stone-900"
+            placeholder="e.g. Hand-embroidered silk cushion cover"
+          />
+          <p className="text-xs text-stone-400 mt-1 text-right">
+            {shortDescription.length}/160
+          </p>
+        </div>
+
+        <div>
+          <label htmlFor="description" className="block text-xs uppercase tracking-widest text-stone-500 mb-2">
+            Full Description
+          </label>
+          <p className="text-xs text-stone-400 mb-2">
+            As much detail as you like, shown on this product&apos;s own page.
+          </p>
           <textarea
             id="description"
-            rows={4}
+            rows={6}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full border border-stone-200 p-3 text-sm focus:outline-stone-900"
-            placeholder="What makes this piece special?"
+            placeholder="What makes this piece special? Materials, care instructions, sizing, story behind it..."
           />
         </div>
 
