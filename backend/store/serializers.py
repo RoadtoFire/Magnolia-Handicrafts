@@ -33,9 +33,16 @@ class ProductSerializer(serializers.ModelSerializer):
 
 # NEW: Serializer for the Order Item
 class OrderItemSerializer(serializers.ModelSerializer):
+    # `product` stays a plain PK field (that's what checkout POSTs), but the
+    # admin orders page needs the actual product name to display, not just
+    # its id - added as a separate read-only field rather than nesting the
+    # full ProductSerializer, since nothing here needs the product's price/
+    # stock/images, just its name.
+    product_name = serializers.CharField(source='product.name', read_only=True)
+
     class Meta:
         model = OrderItem
-        fields = ['product', 'quantity', 'price']
+        fields = ['product', 'product_name', 'quantity', 'price']
         # `price` must NEVER be trusted from the client - it is always
         # snapshotted server-side from the Product's current price at the
         # time OrderSerializer.create() runs. See OrderSerializer.create().

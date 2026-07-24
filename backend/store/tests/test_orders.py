@@ -93,6 +93,24 @@ def test_order_total_sums_multiple_items_at_real_prices(api_client):
 
 
 @pytest.mark.django_db
+def test_order_detail_includes_product_name_not_just_id(admin_client, expensive_product):
+    payload = {
+        'full_name': 'Detail Customer',
+        'email': 'detail@example.com',
+        'phone': '0300-6666666',
+        'address': '4 Label Lane',
+        'city': 'Lahore',
+        'items': [{'product': expensive_product.id, 'quantity': 1}],
+    }
+    create_resp = admin_client.post('/api/orders/', payload, format='json')
+    assert create_resp.status_code == 201, create_resp.data
+
+    detail_resp = admin_client.get(f"/api/orders/{create_resp.data['id']}/")
+    assert detail_resp.status_code == 200
+    assert detail_resp.data['items'][0]['product_name'] == expensive_product.name
+
+
+@pytest.mark.django_db
 def test_ordering_out_of_stock_product_is_rejected(api_client, out_of_stock_product):
     payload = {
         'full_name': 'Hopeful Buyer',

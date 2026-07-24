@@ -240,7 +240,7 @@ export default function AdminOrdersPage() {
                                 // baseline shape — index key is fine, this
                                 // list is never reordered/filtered in place.
                                 <tr key={i}>
-                                  <td className="py-1">Product #{item.product}</td>
+                                  <td className="py-1">{item.product_name ?? `Product #${item.product}`}</td>
                                   <td className="py-1">{item.quantity}</td>
                                   <td className="py-1">
                                     PKR {Number(item.price).toLocaleString()}
